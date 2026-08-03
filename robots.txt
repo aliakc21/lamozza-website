@@ -1,5 +1,5 @@
 # La Mozza İncek — robots.txt
-# https://lamozza.com.tr/
+# https://www.lamozza.com.tr/
 
 User-agent: *
 Allow: /
@@ -26,4 +26,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://lamozza.com.tr/sitemap.xml
+Sitemap: https://www.lamozza.com.tr/sitemap.xml

@@ -1,3 +1,3 @@
 Contact: mailto:info@lamozza.com.tr
 Preferred-Languages: tr, en
-Canonical: https://lamozza.com.tr/.well-known/security.txt
+Canonical: https://www.lamozza.com.tr/.well-known/security.txt
