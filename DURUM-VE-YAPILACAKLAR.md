@@ -1,168 +1,68 @@
-# La Mozza — Yayın Durumu ve Kalan Tek Adım
+# La Mozza — Yayın Durumu
 
-Son güncelleme: 3 Ağustos 2026, 13:00
-
----
-
-## 🎫 isimtescil destek talebi AÇILDI
-
-**Ticket ID: 2302904** · Departman: TR Domain Hizmetleri · Öncelik: Yüksek · Durum: Açık
-Konu: *"lamozza.com.tr ve lamozza.tr icin DNS yonetimi acilmiyor - kayit eklenemiyor"*
-
-Talepte dört sorun da bildirildi ve **istenen DNS kayıtları doğrudan verildi** —
-isimtescil bunları kendisi tanımlarsa site kendiliğinden açılır, ek bir şey gerekmez.
-
-Takip: `Panel → Destek → Destek Taleplerim`
+Son güncelleme: 3 Ağustos 2026, 15:00
 
 ---
 
-## 🔬 isimtescil panelinde tespit edilenler (kontrollü testlerle)
+## 🟢 SİTE CANLI
 
-| İşlem | lamozza.org / .xyz | lamozza.com.tr / .tr |
-|---|---|---|
-| DNS bölgesi var mı | ✅ var | ❌ **yok** |
-| Yeni **alt alan adı** kaydı ekleme | ✅ çalışıyor | ❌ hata veriyor |
-| Kendi eklediğin kaydı **silme** | ✅ çalışıyor | — |
-| **Apex (kök)** A kaydını silme | ❌ çalışmıyor | — |
-| **Apex** A kaydını düzenleme | ❌ çalışmıyor | — |
-| Varsayılan `www` CNAME silme | ❌ çalışmıyor | — |
-| "Başka Adrese Yönlendirme" | ❌ uygulanmıyor | ❌ uygulanmıyor |
-| Name server ekleme (.tr) | — | ❌ kaydedilmiyor |
+**http://lamozza.com.tr** — 18 sayfanın tamamı çalışıyor (18/18 test edildi, 200 OK).
 
-**Nasıl doğrulandı:** lamozza.org'a `test-claude` adında geçici bir A kaydı eklendi →
-eklendi. Sonra silindi → silindi. Yani otomasyonda/kullanımda sorun yok.
-Aynı ekranda apex kaydı ne silinebiliyor ne düzenlenebiliyor; `.tr`'lerde ise
-hiçbir kayıt eklenemiyor.
-
-**Sonuç:** Kök (apex) kayıtlar korumalı ve `.tr` bölgeleri hiç oluşturulmamış.
-Bu yüzden siteyi geçici olarak `.org`'a taşımak da mümkün olmadı — apex hâlâ
-isimtescil park sayfasını gösteriyor ve değiştirilemiyor.
-
-**Hiçbir şeye zarar verilmedi:** `.org` ve `.xyz` bölgeleri olduğu gibi duruyor,
-eklenen test kaydı temizlendi.
-
----
-## ✅ Tamamlananlar
-
-| İş | Durum |
+| | Durum |
 |---|---|
-| 18 sayfalık site | Bitti |
-| Fotoğraflar (@lamozzaincek'ten 12 gerçek kare) | Bitti |
-| Mobil / duyarlılık testi (18 sayfa × 5 genişlik = 90 ölçüm) | Temiz |
-| SEO, yapılandırılmış veri, sitemap, robots | Bitti |
-| GitHub deposu | `github.com/aliakc21/lamozza-website` |
-| GitHub Pages | **Kuruldu ve derlendi** (`status: built`) |
-| Özel alan adı ayarı | `lamozza.com.tr` olarak tanımlı |
-
-Site sunucuda hazır bekliyor. Tek eksik: alan adının bu sunucuyu göstermesi.
+| Site | ✅ Canlı, `lamozza.com.tr` |
+| DNS bölgeleri (.com.tr, .tr) | ✅ isimtescil açtı (Ticket 2302904) |
+| `www.lamozza.com.tr` | ✅ Ana adrese 301 |
+| `lamozza.org` → `lamozza.com.tr` | ✅ Yönlendirme aktif |
+| `lamozza.xyz` → `lamozza.com.tr` | ✅ Yönlendirme aktif |
+| `lamozza.tr` → `lamozza.com.tr` | ⏳ Ayarlandı, DNS yayılıyor |
+| **HTTPS** | ⏳ **Aşağıdaki tek hata düzelince otomatik açılacak** |
 
 ---
 
-## ⛔ Tek engel: isimtescil `.tr` DNS bölgesi açık değil
+## ⚠️ KALAN TEK SORUN — isimtescil'de bir yazım hatası
 
-### Tespit
+isimtescil, `lamozza.com.tr` için istediğim 4 A kaydını girerken **birini yanlış yazmış:**
 
-| Alan adı | nic.tr delegasyonu | isimtescil DNS bölgesi | Kayıt eklenebiliyor mu |
-|---|---|---|---|
-| **lamozza.com.tr** | ✅ tr.dnsenable.com, eu.dnsenable.com | ❌ **YOK** | ❌ Hayır |
-| **lamozza.tr** | ✅ tr.dnsenable.com, eu.dnsenable.com | ❌ **YOK** | ❌ Hayır |
-| lamozza.org | ✅ | ✅ Var (A + NS + CNAME) | ✅ Evet |
-| lamozza.xyz | ✅ | ✅ Var (A + NS + CNAME) | ✅ Evet |
-
-**Yani sorun bizde değil.** Alan adlarının name server'ları registry'de (nic.tr)
-doğru şekilde isimtescil'i gösteriyor. Ama isimtescil kendi DNS sunucularında bu
-iki `.tr` alan adı için bölge dosyasını müşteri paneline bağlamamış.
-
-Panelde `Domain → lamozza.com.tr → IP Bazlı DNS Yönetimi` şunu diyor:
-> "Henüz eklenmiş DNS kaydı bulunmamaktadır."
-
-- **"Varsayılan Dns Ekle"** butonu → hiçbir şey yapmıyor, kayıt oluşmuyor
-- **A kaydı ekleme** → *"DNS kaydı eklenemedi. Kayıtta geçersiz veya gereksiz
-  karakterler olabilir."* hatası (kayıt adı `@` da olsa, `www` da olsa aynı)
-
-Aynı işlemler `lamozza.org` ve `lamozza.xyz` üzerinde **sorunsuz** çalışıyor.
-Dolayısıyla panel kullanımıyla ilgili bir hata değil, `.tr` tarafında
-sağlama/provisioning eksiği.
-
-### Çözüm: destek talebi (AÇILDI — Ticket 2302904)
-
-**En hızlısı telefon:** +90 850 200 0 444 (7/24)
-**Yazılı:** destek@isimtescil.net veya panel → Destek
-
-#### Gönderilecek metin
-
-> **Konu: lamozza.com.tr ve lamozza.tr için DNS yönetimi açılmıyor**
->
-> Merhaba,
->
-> Üye ID: 201898
->
-> **lamozza.com.tr** (Ürün ID 5607737) ve **lamozza.tr** (Ürün ID 5607736) alan
-> adlarımın panelindeki *IP Bazlı DNS Yönetimi* bölümünde "Henüz eklenmiş DNS
-> kaydı bulunmamaktadır" yazıyor.
->
-> - "Varsayılan Dns Ekle" butonuna bastığımda hiçbir kayıt oluşmuyor.
-> - Manuel A kaydı eklemeye çalıştığımda *"DNS kaydı eklenemedi. Kayıtta
->   geçersiz veya gereksiz karakterler olabilir."* hatası alıyorum. (Kayıt adı
->   olarak hem `@` hem `www` denedim, IP adresi geçerli.)
->
-> Aynı hesaptaki **lamozza.org** ve **lamozza.xyz** alan adlarında aynı ekran
-> sorunsuz çalışıyor ve kayıtlar görünüyor. WHOIS'te her iki `.tr` alan adının
-> name server'ları da doğru şekilde `tr.dnsenable.com` ve `eu.dnsenable.com`
-> olarak görünüyor.
->
-> Bu iki alan adı için DNS bölgesinin açılmasını rica ediyorum. Açıldıktan sonra
-> ekleyeceğim kayıtlar şunlar olacak (siteyi GitHub Pages'te yayınlıyorum):
->
-> ```
-> A      @      185.199.108.153
-> A      @      185.199.109.153
-> A      @      185.199.110.153
-> A      @      185.199.111.153
-> CNAME  www    aliakc21.github.io
-> ```
->
-> Dilerseniz bu kayıtları siz de tanımlayabilirsiniz.
->
-> Teşekkürler.
-
----
-
-## 📋 DNS açıldıktan sonra yapılacaklar (5 dakika)
-
-### 1. lamozza.com.tr — siteyi yayına al
-
-`Panel → Domainlerim → lamozza.com.tr → IP Bazlı DNS Yönetimi`
-
-| Tip | Kayıt adı | Değer |
-|---|---|---|
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| CNAME | `www` | `aliakc21.github.io` |
-
-Sonra GitHub'da: `Settings → Pages → Enforce HTTPS` işaretlenir
-(sertifika DNS yayıldıktan ~15 dk sonra hazır olur).
-
-### 2. lamozza.tr, lamozza.org, lamozza.xyz — ana adrese yönlendir
-
-`Panel → Domainlerim → <alan adı> → Başka Adrese Yönlendirme`
-
-- Yönlendirme Tipi: **Standart Yönlendirme** (maskeli DEĞİL — maskeli, adres
-  çubuğunda eski alan adını bırakır ve Google bunu kopya içerik sayar)
-- Yönlendirilecek Adres: `https://lamozza.com.tr`
-- Sayfa Başlığı: `La Mozza İncek`
-
-> `.org` ve `.xyz` için bu ekran hazır ve çalışıyor. `.tr` için DNS açıldıktan
-> sonra yapılabilir.
-
-### 3. Doğrulama
-
-```bash
-dig +short lamozza.com.tr
 ```
-Cevap `185.199.10x.153` ise DNS tamam. Ardından `https://lamozza.com.tr` açılır.
+185.199.108.153   ✅
+185.199.109.153   ✅
+185.199.110.153   ✅
+185.199.111.15    ❌  ← sonunda "3" eksik, doğrusu 185.199.111.153
+```
+
+**İki sonucu var:**
+
+1. **Ziyaretçilerin ~%25'i siteye ulaşamıyor.** O IP GitHub'a ait değil; test ettim,
+   `HTTP/1.1 500 Domain Not Found` dönüyor.
+2. **HTTPS açılamıyor.** GitHub sertifika vermeden önce *tüm* A kayıtlarını doğruluyor;
+   yabancı bir IP varken sertifika üretmiyor. (`gh api` cevabı: *"The certificate does not exist yet"*.)
+
+**Bu kaydı panelden düzeltemiyorum:** kök (apex) kayıtlar korumalı — silmeye çalışınca
+"işlem başarılı" diyor ama kayıt duruyor, kalemle düzenleyip kaydedince de değişmiyor.
+Aynı davranışı `lamozza.org`'un kök kaydında da görmüştüm; alt alan adı kayıtlarında
+ekleme/silme sorunsuz çalışıyor.
+
+**Yapıldı:** Ticket 2302904'e düzeltme talebi yazıldı (3 Ağustos 15:00).
+
+**Düzeldiği an ne olacak:** Arka planda bir izleyici çalışıyor; kayıt düzelir düzelmez
+GitHub'da HTTPS'i otomatik açacak. Elle bir şey yapılmasına gerek yok.
+
+> Not: `lamozza.tr`'de dört kaydın dördü de doğru girilmiş, orada bu sorun yok.
+
+---
+
+## 📋 Yapılan işlemler (3 Ağustos)
+
+1. DNS bölgelerinin açıldığı yetkili sunucudan doğrulandı (`dig +norecurse SOA @tr.dnsenable.com` → `aa` bayrağı, `ANSWER: 1`)
+2. Hatalı A kaydı tespit edildi ve ölü olduğu kanıtlandı (`--resolve` ile doğrudan test)
+3. Kayıt panelden silinmeye/düzenlenmeye çalışıldı → apex korumalı, olmadı
+4. Ticket 2302904'e düzeltme talebi yazıldı
+5. `.tr`, `.org`, `.xyz` için Standart Yönlendirme → `https://lamozza.com.tr` ayarlandı
+6. 18 sayfa canlı adreste tek tek test edildi → 18/18 · 200 OK
+7. Varlıklar test edildi (CSS, JS, fotoğraflar, og-image, favicon, sitemap, robots, manifest) → hepsi 200
+8. Olmayan sayfa → 404 doğru çalışıyor
+9. Ana sayfa içeriği doğrulandı: title, canonical, h1, 37 görsel, telefon + WhatsApp bağlantıları
 
 ---
 
