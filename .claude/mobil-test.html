@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>La Mozza — Duyarlılık Testi</title>
+<style>
+  body{font:13px/1.5 ui-monospace,Menlo,monospace;background:#12140f;color:#e8e4d9;margin:0;padding:16px}
+  h1{font:600 16px/1.3 system-ui;margin:0 0 12px}
+  table{border-collapse:collapse;width:100%}
+  th,td{padding:5px 8px;border-bottom:1px solid #2c2f26;text-align:left;white-space:nowrap}
+  th{color:#a89474;font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+  .ok{color:#5fbf7d}
+  .fail{color:#ff7a6b;font-weight:700}
+  .ozet{margin:14px 0;padding:10px 14px;border-radius:6px;font-size:14px}
+  .ozet.iyi{background:#1c3324;color:#8ee0a3}
+  .ozet.kotu{background:#3a1d19;color:#ff9a8d}
+  iframe{position:absolute;left:-99999px;top:0;border:0}
+  .det{color:#8e8a7c;font-size:11px;white-space:normal}
+</style>
+</head>
+<body>
+<h1>La Mozza — yatay taşma / duyarlılık testi</h1>
+<div id="ozet" class="ozet">Çalışıyor…</div>
+<table><thead><tr><th>Sayfa</th><th>360px</th><th>390px</th><th>430px</th><th>768px</th><th>1024px</th><th>Taşıran</th></tr></thead>
+<tbody id="satirlar"></tbody></table>
+
+<script>
+const SAYFALAR = [
+  "/", "/dugun/", "/kina-gecesi/", "/nisan-soz/", "/nikah/", "/after-party/",
+  "/sunnet/", "/dogum-gunu/", "/kurumsal-etkinlik/", "/galeri/", "/sss/",
+  "/iletisim/", "/kvkk/", "/incek-dugun-salonu/", "/golbasi-dugun-mekani/",
+  "/ankara-kir-dugunu/", "/ankara-kina-mekani/", "/404.html"
+];
+const GENISLIKLER = [360, 390, 430, 768, 1024];
+
+function olc(yol, w) {
+  return new Promise(function (coz) {
+    var f = document.createElement("iframe");
+    f.style.width = w + "px";
+    f.style.height = "900px";
+    f.src = yol;
+    f.onload = function () {
+      setTimeout(function () {
+        try {
+          var d = f.contentDocument;
+          var de = d.documentElement;
+          var fark = de.scrollWidth - de.clientWidth;
+          var sucluler = [];
+          if (fark > 2) {
+            d.querySelectorAll("body *").forEach(function (el) {
+              var sabit = false, p = el;
+              while (p && p !== d.body) {
+                if (f.contentWindow.getComputedStyle(p).position === "fixed") { sabit = true; break; }
+                p = p.parentElement;
+              }
+              if (sabit) return;
+              var cs = f.contentWindow.getComputedStyle(el);
+              if (cs.overflowX === "auto" || cs.overflowX === "scroll" || cs.overflowX === "hidden") return;
+              var r = el.getBoundingClientRect();
+              if (r.right > de.clientWidth + 2 || r.width > de.clientWidth + 2) {
+                var kapali = false, q = el.parentElement;
+                while (q && q !== d.body) {
+                  var qs = f.contentWindow.getComputedStyle(q);
+                  if (qs.overflowX === "auto" || qs.overflowX === "scroll" || qs.overflowX === "hidden") { kapali = true; break; }
+                  q = q.parentElement;
+                }
+                if (!kapali) sucluler.push(el.tagName.toLowerCase() + "." + (el.getAttribute("class") || "").split(" ")[0]);
+              }
+            });
+          }
+          f.remove();
+          coz({ fark: fark, suclu: [...new Set(sucluler)].slice(0, 4) });
+        } catch (e) { f.remove(); coz({ fark: -1, suclu: ["hata:" + e.message] }); }
+      }, 900);
+    };
+    document.body.appendChild(f);
+  });
+}
+
+(async function () {
+  var govde = document.getElementById("satirlar");
+  var hataSayisi = 0, toplam = 0;
+  for (const yol of SAYFALAR) {
+    var tr = document.createElement("tr");
+    var hucreler = "<td>" + yol + "</td>";
+    var sucluAll = [];
+    for (const w of GENISLIKLER) {
+      var s = await olc(yol, w);
+      toplam++;
+      if (s.fark > 2) {
+        hataSayisi++;
+        hucreler += '<td class="fail">+' + s.fark + "px</td>";
+        sucluAll = sucluAll.concat(s.suclu);
+      } else if (s.fark < 0) {
+        hataSayisi++;
+        hucreler += '<td class="fail">HATA</td>';
+      } else {
+        hucreler += '<td class="ok">✓</td>';
+      }
+    }
+    hucreler += '<td class="det">' + [...new Set(sucluAll)].join(", ") + "</td>";
+    tr.innerHTML = hucreler;
+    govde.appendChild(tr);
+  }
+  var o = document.getElementById("ozet");
+  if (hataSayisi === 0) {
+    o.className = "ozet iyi";
+    o.textContent = "✓ TEMİZ — " + toplam + " ölçümün hepsinde yatay taşma yok.";
+  } else {
+    o.className = "ozet kotu";
+    o.textContent = "✗ " + hataSayisi + " / " + toplam + " ölçümde yatay taşma var.";
+  }
+  document.title = hataSayisi === 0 ? "TEMIZ" : ("HATA-" + hataSayisi);
+})();
+</script>
+</body>
+</html>

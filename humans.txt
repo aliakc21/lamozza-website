@@ -1,0 +1,11 @@
+/* MEKÂN */
+    İsim:      La Mozza İncek — Wedding Garden & Event Hall
+    Konum:     İncek Mah. Turgut Özal Bulvarı, Dural Cad. No: 8, Gölbaşı / Ankara
+    İletişim:  0312 460 16 11 · 0533 014 38 53
+    Instagram: @lamozzaincek
+
+/* SİTE */
+    Dil:       Türkçe (tr-TR)
+    Yapı:      Statik HTML, bağımlılıksız CSS ve JavaScript
+    Tipografi: Fraunces, Figtree, DM Mono (Google Fonts, latin-ext)
+    Erişim:    WCAG AA kontrast, prefers-reduced-motion desteği, klavye erişimi

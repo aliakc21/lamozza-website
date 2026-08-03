@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><title>tur-test</title>
+<style>body{margin:0;background:#111;color:#0f0;font:16px monospace}
+iframe{width:1280px;height:900px;border:0;display:block}
+#r{padding:14px;font-size:22px;white-space:pre}</style></head><body>
+<div id="r">bekliyor…</div><iframe id="f" src="/"></iframe>
+<script>
+var f=document.getElementById('f'), r=document.getElementById('r'), log=[];
+f.onload=function(){
+  setTimeout(function(){
+    var w=f.contentWindow, d=f.contentDocument;
+    var adimlar=[].slice.call(d.querySelectorAll('.tur__adim'));
+    var sira=[0,1,2,3], i=0;
+    function bas(){
+      if(i>=sira.length){ r.textContent=log.join('\n'); document.title='BITTI'; return; }
+      var a=adimlar[sira[i]];
+      var y=a.offsetTop + a.offsetHeight/2 - w.innerHeight/2;
+      // offsetTop belge köküne göre değil; getBoundingClientRect + scrollY kullan
+      var rc=a.getBoundingClientRect();
+      y = rc.top + w.scrollY + rc.height/2 - w.innerHeight/2;
+      w.scrollTo({top:y, behavior:'instant'});
+      w.dispatchEvent(new w.Event('scroll'));   // headless programatik kaydırmada scroll olayı üretmiyor
+      setTimeout(function(){
+        var katlar=[].slice.call(d.querySelectorAll('.tur__kat'));
+        var aktif=katlar.findIndex(function(k){return k.getAttribute('data-aktif')==='true';});
+        var gorunen=katlar.findIndex(function(k){return parseFloat(w.getComputedStyle(k).opacity)>0.5;});
+        var imgW=katlar.map(function(k){var im=k.querySelector('img');return im?im.naturalWidth:-1;});
+        var stik=d.querySelector('.tur__sahne').getBoundingClientRect();
+        log.push('adim '+sira[i]+' -> attr:'+aktif+' gorunen:'+gorunen+(gorunen===sira[i]?'  ✓':'  ✗ HATA')
+                 +'  | sahne top: '+Math.round(stik.top)+'  | img: '+imgW.join(','));
+        i++; bas();
+      },550);
+    }
+    bas();
+  },1500);
+};
+</script></body></html>

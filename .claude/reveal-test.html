@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><title>reveal</title>
+<style>body{margin:0;background:#111;color:#0f0;font:20px monospace}#r{padding:12px;white-space:pre}iframe{width:1440px;height:900px;border:0}</style>
+</head><body><div id="r">…</div><iframe id="f" src="/galeri/"></iframe>
+<script>
+var f=document.getElementById('f');
+f.onload=function(){
+  var t0=Date.now();
+  var adim=0;
+  var iv=setInterval(function(){
+    // her turda bir ekran aşağı kaydır ki açılma davranışı gerçek kullanımı taklit etsin
+    f.contentWindow.scrollTo({top: (++adim)*700, behavior:'instant'});
+    f.contentWindow.dispatchEvent(new f.contentWindow.Event('scroll'));
+    var d=f.contentDocument, w=f.contentWindow;
+    var tum=d.querySelectorAll('.ac,.kay').length, gor=d.querySelectorAll('.gorundu').length;
+    var moz=d.querySelector('.mozaik .gorsel');
+    var ratio='?';
+    if(moz){
+      var g=new w.IntersectionObserver(function(gs){ratio=gs[0].intersectionRatio+'/'+gs[0].isIntersecting;g.disconnect();},{rootMargin:'0px 0px -9% 0px',threshold:0.08});
+      g.observe(moz);
+    }
+    document.getElementById('r').textContent =
+      't='+(Date.now()-t0)+'ms  gorundu '+gor+'/'+tum+'\nIO-oran: '+ratio+
+      '\nviewport: '+w.innerWidth+'x'+w.innerHeight+
+      '\nmozaik-ilk-rect: '+JSON.stringify(moz?moz.getBoundingClientRect().toJSON():null);
+    if(Date.now()-t0>7000){clearInterval(iv);document.title='BITTI';}
+  },600);
+};
+</script></body></html>

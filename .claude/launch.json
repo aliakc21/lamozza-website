@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lamozza",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/Users/akc/Documents/LAMOZZA/.claude/serve.py", "8099"],
+      "port": 8099
+    }
+  ]
+}

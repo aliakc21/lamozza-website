@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="La Mozza">
+  <defs>
+    <linearGradient id="t" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2F332A"/>
+      <stop offset="1" stop-color="#23261F"/>
+    </linearGradient>
+  </defs>
+  <!-- Kemer formu: konak kapısı -->
+  <path d="M8 62V26a24 24 0 0 1 48 0v36z" fill="url(#t)"/>
+  <path d="M8 62V26a24 24 0 0 1 48 0v36z" fill="none" stroke="#A89474" stroke-width="2"/>
+  <text x="32" y="45" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="#F5F1E8" letter-spacing="-1">LM</text>
+</svg>

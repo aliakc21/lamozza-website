@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="La Mozza İncek — Ankara Düğün ve Etkinlik Mekanı">
+  <defs>
+    <linearGradient id="zemin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3B3E33"/>
+      <stop offset=".45" stop-color="#2A2D24"/>
+      <stop offset="1" stop-color="#1E211A"/>
+    </linearGradient>
+    <radialGradient id="isik1" cx=".18" cy=".1" r=".7">
+      <stop offset="0" stop-color="#A89474" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#A89474" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="isik2" cx=".88" cy=".92" r=".6">
+      <stop offset="0" stop-color="#5A6350" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#5A6350" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="gren"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#zemin)"/>
+  <rect width="1200" height="630" fill="url(#isik1)"/>
+  <rect width="1200" height="630" fill="url(#isik2)"/>
+  <rect width="1200" height="630" filter="url(#gren)" opacity=".08"/>
+
+  <!-- Kemer motifi -->
+  <g opacity=".22" fill="none" stroke="#A89474" stroke-width="2">
+    <path d="M905 560V330a95 95 0 0 1 190 0v230"/>
+    <path d="M945 560V345a55 55 0 0 1 110 0v215"/>
+  </g>
+
+  <!-- Marka -->
+  <g fill="#F5F1E8" font-family="Georgia, 'Times New Roman', serif">
+    <text x="80" y="252" font-size="96" letter-spacing="-2">La Mozza</text>
+  </g>
+  <text x="80" y="196" fill="#D9CDB4" font-family="ui-monospace, Menlo, monospace"
+        font-size="20" letter-spacing="7">İNCEK · GÖLBAŞI · ANKARA</text>
+  <text x="80" y="316" fill="#DCD7C9" font-family="Helvetica, Arial, sans-serif" font-size="30">
+    Düğün · Kına Gecesi · Nişan · Kurumsal Etkinlik
+  </text>
+
+  <line x1="80" y1="380" x2="1120" y2="380" stroke="#F5F1E8" stroke-opacity=".22" stroke-width="1"/>
+
+  <!-- Rakamlar -->
+  <g font-family="Georgia, serif" fill="#F5F1E8">
+    <text x="80"  y="470" font-size="62" letter-spacing="-2">900</text>
+    <text x="330" y="470" font-size="62" letter-spacing="-2">500</text>
+    <text x="580" y="470" font-size="62" letter-spacing="-2">400</text>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" fill="#B9B3A2" font-size="17" letter-spacing="3">
+    <text x="82"  y="506">KİŞİ · KIR BAHÇESİ</text>
+    <text x="332" y="506">KİŞİ · KAPALI SALON</text>
+    <text x="582" y="506">ARAÇ · OTOPARK</text>
+  </g>
+
+  <text x="80" y="576" fill="#8E8A7C" font-family="ui-monospace, Menlo, monospace" font-size="18" letter-spacing="4">
+    LAMOZZA.COM.TR
+  </text>
+</svg>
