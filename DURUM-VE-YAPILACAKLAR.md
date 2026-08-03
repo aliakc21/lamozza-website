@@ -1,9 +1,47 @@
 # La Mozza — Yayın Durumu ve Kalan Tek Adım
 
-Son güncelleme: 3 Ağustos 2026
+Son güncelleme: 3 Ağustos 2026, 13:00
 
 ---
 
+## 🎫 isimtescil destek talebi AÇILDI
+
+**Ticket ID: 2302904** · Departman: TR Domain Hizmetleri · Öncelik: Yüksek · Durum: Açık
+Konu: *"lamozza.com.tr ve lamozza.tr icin DNS yonetimi acilmiyor - kayit eklenemiyor"*
+
+Talepte dört sorun da bildirildi ve **istenen DNS kayıtları doğrudan verildi** —
+isimtescil bunları kendisi tanımlarsa site kendiliğinden açılır, ek bir şey gerekmez.
+
+Takip: `Panel → Destek → Destek Taleplerim`
+
+---
+
+## 🔬 isimtescil panelinde tespit edilenler (kontrollü testlerle)
+
+| İşlem | lamozza.org / .xyz | lamozza.com.tr / .tr |
+|---|---|---|
+| DNS bölgesi var mı | ✅ var | ❌ **yok** |
+| Yeni **alt alan adı** kaydı ekleme | ✅ çalışıyor | ❌ hata veriyor |
+| Kendi eklediğin kaydı **silme** | ✅ çalışıyor | — |
+| **Apex (kök)** A kaydını silme | ❌ çalışmıyor | — |
+| **Apex** A kaydını düzenleme | ❌ çalışmıyor | — |
+| Varsayılan `www` CNAME silme | ❌ çalışmıyor | — |
+| "Başka Adrese Yönlendirme" | ❌ uygulanmıyor | ❌ uygulanmıyor |
+| Name server ekleme (.tr) | — | ❌ kaydedilmiyor |
+
+**Nasıl doğrulandı:** lamozza.org'a `test-claude` adında geçici bir A kaydı eklendi →
+eklendi. Sonra silindi → silindi. Yani otomasyonda/kullanımda sorun yok.
+Aynı ekranda apex kaydı ne silinebiliyor ne düzenlenebiliyor; `.tr`'lerde ise
+hiçbir kayıt eklenemiyor.
+
+**Sonuç:** Kök (apex) kayıtlar korumalı ve `.tr` bölgeleri hiç oluşturulmamış.
+Bu yüzden siteyi geçici olarak `.org`'a taşımak da mümkün olmadı — apex hâlâ
+isimtescil park sayfasını gösteriyor ve değiştirilemiyor.
+
+**Hiçbir şeye zarar verilmedi:** `.org` ve `.xyz` bölgeleri olduğu gibi duruyor,
+eklenen test kaydı temizlendi.
+
+---
 ## ✅ Tamamlananlar
 
 | İş | Durum |
@@ -46,7 +84,7 @@ Aynı işlemler `lamozza.org` ve `lamozza.xyz` üzerinde **sorunsuz** çalışı
 Dolayısıyla panel kullanımıyla ilgili bir hata değil, `.tr` tarafında
 sağlama/provisioning eksiği.
 
-### Çözüm: isimtescil'e 1 destek kaydı
+### Çözüm: destek talebi (AÇILDI — Ticket 2302904)
 
 **En hızlısı telefon:** +90 850 200 0 444 (7/24)
 **Yazılı:** destek@isimtescil.net veya panel → Destek
