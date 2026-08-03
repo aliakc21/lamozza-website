@@ -1,28 +1,40 @@
 # La Mozza — Yayın Durumu
 
-Son güncelleme: 3 Ağustos 2026, 15:00
+Son güncelleme: 3 Ağustos 2026, 16:45
 
 ---
 
-## 🟢 SİTE CANLI
+## 🟢 SİTE CANLI VE HTTPS'Lİ
 
-**http://lamozza.com.tr** — 18 sayfanın tamamı çalışıyor (18/18 test edildi, 200 OK).
+# https://www.lamozza.com.tr
 
-| | Durum |
+18 sayfanın tamamı HTTPS üzerinden test edildi → **18/18 · 200 OK**
+Sertifika: Let's Encrypt, geçerli (3 Ağu → 1 Kas 2026), otomatik yenilenir.
+
+| Adres | Durum |
 |---|---|
-| Site | ✅ Canlı, `lamozza.com.tr` |
-| DNS bölgeleri (.com.tr, .tr) | ✅ isimtescil açtı (Ticket 2302904) |
-| `www.lamozza.com.tr` | ✅ Ana adrese 301 |
-| `lamozza.org` → `lamozza.com.tr` | ✅ Yönlendirme aktif |
-| `lamozza.xyz` → `lamozza.com.tr` | ✅ Yönlendirme aktif |
-| `lamozza.tr` → `lamozza.com.tr` | ⏳ Ayarlandı, DNS yayılıyor |
-| **HTTPS** | ⏳ **Aşağıdaki tek hata düzelince otomatik açılacak** |
+| `https://www.lamozza.com.tr` | ✅ **Site — HTTPS** |
+| `http://www.lamozza.com.tr` | ✅ 301 → HTTPS |
+| `http://lamozza.com.tr` | ✅ 301 → https://www.lamozza.com.tr |
+| `https://lamozza.com.tr` | ❌ Sertifika yok (aşağıdaki yazım hatası yüzünden) |
+| `lamozza.org` / `.xyz` / `.tr` | ⚠️ Yönlendiriyor ama **hedefi güncellenmeli** |
+
+### Neden `www`?
+
+`www.lamozza.com.tr` bir **CNAME** kaydı (`aliakc21.github.io`) — GitHub'ın kendi
+DNS'ini takip ediyor, dolayısıyla dört IP'nin dördü de doğru geliyor ve isimtescil'in
+yazım hatasından **etkilenmiyor**. Bu sayede sertifika alınabildi.
+
+Kök alan adı ise sabit 4 A kaydına bağlı ve biri hatalı → sertifika alamıyor.
+GitHub da zaten `www` kullanımını öneriyor (IP değişikliklerinde kayıt bayatlamaz).
 
 ---
 
-## ⚠️ KALAN TEK SORUN — isimtescil'de bir yazım hatası
+## ⚠️ isimtescil'de kalan 2 iş
 
-isimtescil, `lamozza.com.tr` için istediğim 4 A kaydını girerken **birini yanlış yazmış:**
+### 1. Yanlış girilen A kaydı
+
+`lamozza.com.tr` için girilen 4 A kaydından biri hatalı:
 
 ```
 185.199.108.153   ✅
@@ -31,38 +43,45 @@ isimtescil, `lamozza.com.tr` için istediğim 4 A kaydını girerken **birini ya
 185.199.111.15    ❌  ← sonunda "3" eksik, doğrusu 185.199.111.153
 ```
 
-**İki sonucu var:**
+O IP GitHub'a ait değil, test edildi: `HTTP/1.1 500 Domain Not Found`.
+Etkisi: doğrudan `lamozza.com.tr` yazan ziyaretçilerin ~%25'i hata alıyor ve
+`https://lamozza.com.tr` (www'suz HTTPS) çalışmıyor.
 
-1. **Ziyaretçilerin ~%25'i siteye ulaşamıyor.** O IP GitHub'a ait değil; test ettim,
-   `HTTP/1.1 500 Domain Not Found` dönüyor.
-2. **HTTPS açılamıyor.** GitHub sertifika vermeden önce *tüm* A kayıtlarını doğruluyor;
-   yabancı bir IP varken sertifika üretmiyor. (`gh api` cevabı: *"The certificate does not exist yet"*.)
+**Panelden düzeltilemiyor** — kök (apex) kayıtlar korumalı: silme "başarılı" diyor
+ama kayıt duruyor, kalemle düzenleyip kaydedince değişmiyor. Alt alan adı
+kayıtlarında aynı işlemler sorunsuz çalışıyor.
 
-**Bu kaydı panelden düzeltemiyorum:** kök (apex) kayıtlar korumalı — silmeye çalışınca
-"işlem başarılı" diyor ama kayıt duruyor, kalemle düzenleyip kaydedince de değişmiyor.
-Aynı davranışı `lamozza.org`'un kök kaydında da görmüştüm; alt alan adı kayıtlarında
-ekleme/silme sorunsuz çalışıyor.
+→ **Ticket 2302904'e düzeltme talebi yazıldı.** Düzelince `https://lamozza.com.tr`
+de kendiliğinden çalışmaya başlayacak (GitHub kök için de sertifika üretir).
 
-**Yapıldı:** Ticket 2302904'e düzeltme talebi yazıldı (3 Ağustos 15:00).
+### 2. Yönlendirme hedefleri güncellenmeli
 
-**Düzeldiği an ne olacak:** Arka planda bir izleyici çalışıyor; kayıt düzelir düzelmez
-GitHub'da HTTPS'i otomatik açacak. Elle bir şey yapılmasına gerek yok.
+`.tr`, `.org`, `.xyz` şu an `https://lamozza.com.tr`'ye yönlendiriyor — o adresin
+sertifikası olmadığı için bağlantı kurulamıyor. Hedef şu olmalı:
 
-> Not: `lamozza.tr`'de dört kaydın dördü de doğru girilmiş, orada bu sorun yok.
+```
+https://www.lamozza.com.tr
+```
+
+`Panel → Domainlerim → <alan adı> → Başka Adrese Yönlendirme` · Standart Yönlendirme
+
+> **isimtescil oturumu düştü**, panele yeniden giriş yapılması gerekiyor.
+> Giriş yapıldıktan sonra bu üç yönlendirme 2 dakikada güncellenebilir.
 
 ---
 
-## 📋 Yapılan işlemler (3 Ağustos)
+## 📋 3 Ağustos'ta yapılanlar
 
-1. DNS bölgelerinin açıldığı yetkili sunucudan doğrulandı (`dig +norecurse SOA @tr.dnsenable.com` → `aa` bayrağı, `ANSWER: 1`)
-2. Hatalı A kaydı tespit edildi ve ölü olduğu kanıtlandı (`--resolve` ile doğrudan test)
-3. Kayıt panelden silinmeye/düzenlenmeye çalışıldı → apex korumalı, olmadı
+1. DNS bölgelerinin açıldığı yetkili sunucudan doğrulandı
+2. Hatalı A kaydı tespit edildi, ölü olduğu `curl --resolve` ile kanıtlandı
+3. Panelden silme/düzenleme denendi → apex korumalı
 4. Ticket 2302904'e düzeltme talebi yazıldı
-5. `.tr`, `.org`, `.xyz` için Standart Yönlendirme → `https://lamozza.com.tr` ayarlandı
-6. 18 sayfa canlı adreste tek tek test edildi → 18/18 · 200 OK
-7. Varlıklar test edildi (CSS, JS, fotoğraflar, og-image, favicon, sitemap, robots, manifest) → hepsi 200
-8. Olmayan sayfa → 404 doğru çalışıyor
-9. Ana sayfa içeriği doğrulandı: title, canonical, h1, 37 görsel, telefon + WhatsApp bağlantıları
+5. `.tr`, `.org`, `.xyz` yönlendirmeleri kuruldu (üçü de aktif)
+6. Site `www.lamozza.com.tr` üzerine alındı → **sertifika onaylandı, HTTPS açıldı**
+7. Tüm site URL'leri (canonical, og:url, JSON-LD, sitemap, robots, llms.txt) `www`'ye güncellendi
+8. 18 sayfa HTTP ve HTTPS üzerinden ayrı ayrı test edildi → 18/18
+9. Varlıklar test edildi (CSS, JS, fotoğraflar, og-image, favicon, sitemap, robots, manifest) → hepsi 200
+10. 404 sayfası doğrulandı
 
 ---
 
