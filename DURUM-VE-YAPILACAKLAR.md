@@ -199,3 +199,35 @@ herkese açık erişimde 640 piksel sınırı koyduğu için tasarım buna göre
 (hiçbir görsel büyütülmüyor). Elinizdeki **orijinal yüksek çözünürlüklü**
 fotoğrafları aynı isimle `assets/img/` altına koyarsanız site kendiliğinden
 keskinleşir — hangi dosyanın nereye geldiği `README.md` bölüm 5'te listeli.
+
+---
+
+## 🧪 Teşhisi kesinleştiren DNS ölçümleri
+
+Destek talebine itiraz gelirse bu kanıtlar kullanılabilir:
+
+```bash
+# .org'un bölgesi VAR — yetkili cevap veriyor (aa bayrağı) ve bugün düzenlenmiş
+dig +norecurse SOA lamozza.org @tr.dnsenable.com
+#   → flags: qr aa;  ANSWER: 1;  serial 2026080302
+
+# .com.tr'nin bölgesi YOK — aynı sunucu hiçbir kayıt döndürmüyor
+dig +norecurse SOA lamozza.com.tr @tr.dnsenable.com
+#   → ANSWER: 0;  yetkili bölümde sadece genel "com.tr SOA hostmaster.dnsenable.com"
+
+# Delegasyon farkı: .org 3 name server, .com.tr sadece 2
+dig +short NS lamozza.org      # us. + tr. + eu.dnsenable.com
+dig +trace NS lamozza.com.tr   # sadece tr. + eu.dnsenable.com  ← us. EKSİK
+```
+
+**Özet:** Aynı hesapta `.org`/`.xyz` için ücretsiz DNS servisi sağlanmış
+(bölge dosyası + 3. name server var), `.com.tr`/`.tr` için **hiç sağlanmamış**
+(bölge yok + `us.dnsenable.com` eksik). Sorun kayıt biçimi değil, servisin bu iki
+alan adı için hiç açılmamış olması. Talep tam olarak bunu istiyor.
+
+### Destek yanıt vermezse yedek plan
+
+isimtescil panelinde `.com.tr` için **"Müşteriye Özel DNS / harici nameserver"**
+alanının açılmasını istemek (talebin (b) maddesi). Açılırsa DNS'i ücretsiz bir
+sağlayıcıya (deSEC, Hetzner DNS, Cloudflare) taşıyıp kayıtları oradan yönetiriz.
+O senaryoda tek gereken bir hesap açılması — o adımı ben yapamam, gerisini yaparım.
