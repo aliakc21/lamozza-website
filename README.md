@@ -10,12 +10,19 @@ sunucuya koymak yeterli.
 
 Elde 4 alan adı var. Önerilen kurgu:
 
-| Alan adı | Rol | Yapılacak |
+| Alan adı | Rol | Durum |
 |---|---|---|
-| **lamozza.com.tr** | **ANA (canonical)** | Site burada yayınlanır |
-| lamozza.tr | Yönlendirme | 301 → `https://lamozza.com.tr` |
-| lamozza.org | Yönlendirme | 301 → `https://lamozza.com.tr` |
-| lamozza.xyz | Yönlendirme | 301 → `https://lamozza.com.tr` |
+| **www.lamozza.com.tr** | **ANA (canonical)** | ✅ Site burada, HTTPS'li |
+| lamozza.com.tr | Kök → www | ✅ 301 ile www'ye gidiyor |
+| lamozza.tr | Yönlendirme | Hedefi `https://www.lamozza.com.tr` yapılmalı |
+| lamozza.org | Yönlendirme | Hedefi `https://www.lamozza.com.tr` yapılmalı |
+| lamozza.xyz | Yönlendirme | Hedefi `https://www.lamozza.com.tr` yapılmalı |
+
+> **Neden `www`?** `www` bir CNAME kaydı olduğu için GitHub'ın kendi DNS'ini
+> takip eder; IP'leri değişse bile kayıt bayatlamaz. Kök alan adı ise sabit 4 A
+> kaydına bağlıdır ve isimtescil'in girdiği kayıtlardan biri hatalı olduğu için
+> (`185.199.111.15`, sonunda 3 eksik) kök adres için sertifika üretilemiyor.
+> Ayrıntı: `DURUM-VE-YAPILACAKLAR.md`
 
 **Neden `.com.tr` ana?** Türkiye'de ticari işletmenin en tanınan uzantısı,
 belge ile tescil edildiği için güven sinyali daha yüksek ve Google'ın Türkiye
@@ -25,7 +32,7 @@ yönlendirilir.
 > **Kritik SEO kuralı:** Aynı içerik dört ayrı adreste yayınlanırsa Google bunu
 > kopya içerik sayar ve hiçbiri hak ettiği sıraya çıkamaz. **Sadece bir tanesi**
 > siteyi yayınlar, diğer üçü 301 (kalıcı) yönlendirme yapar. Sitedeki tüm
-> `canonical` etiketleri zaten `lamozza.com.tr`'yi gösteriyor.
+> `canonical` etiketleri `https://www.lamozza.com.tr`'yi gösteriyor.
 
 Ana alan adını değiştirmek isterseniz tek yapılacak: `DEGISTIR.md` dosyasındaki
 adımları izlemek (tüm dosyalarda tek komutla değişir).
@@ -48,7 +55,7 @@ MiniBeauty sitesiyle aynı yöntem.
    git push -u origin main
    ```
 3. Depo → **Settings → Pages** → Source: `Deploy from a branch`, Branch: `main` / `(root)`.
-4. **Custom domain** kutusuna `lamozza.com.tr` yaz, kaydet. (`CNAME` dosyası zaten hazır.)
+4. **Custom domain** kutusuna `www.lamozza.com.tr` yaz, kaydet. (`CNAME` dosyası zaten hazır.)
 5. **Enforce HTTPS** kutusunu işaretle (sertifika birkaç dakikada gelir).
 
 **DNS kayıtları** (isimtescil → lamozza.com.tr → DNS yönetimi):
@@ -59,7 +66,7 @@ MiniBeauty sitesiyle aynı yöntem.
 | A | @ | 185.199.109.153 |
 | A | @ | 185.199.110.153 |
 | A | @ | 185.199.111.153 |
-| CNAME | www | KULLANICI.github.io |
+| CNAME | www | aliakc21.github.io |
 
 ### Seçenek B — Cloudflare Pages / Netlify
 
@@ -78,7 +85,7 @@ Klasörün **içindekileri** `public_html` altına at. `.claude` klasörünü **
 
 **En temiz yol — isimtescil'in kendi yönlendirme servisi:**
 Alan adı paneli → ilgili alan adı → **Yönlendirme / Web Yönlendirme** →
-Hedef: `https://lamozza.com.tr` → Tip: **301 Kalıcı** → `www` dahil işaretle.
+Hedef: `https://www.lamozza.com.tr` → Tip: **301 Kalıcı** → `www` dahil işaretle.
 
 **Alternatif — Cloudflare üzerinden:** Alan adlarının nameserver'ını Cloudflare'e
 alıp Bulk Redirect kuralı yazmak. Daha esnek ama daha çok adım.
@@ -116,21 +123,23 @@ alıp Bulk Redirect kuralı yazmak. Daha esnek ama daha çok adım.
 
 ## 5. Fotoğraflar
 
-### Şu anki durum
+### Şu anki durum — ÖNEMLİ
 
-Sitedeki tüm fotoğraflar **@lamozzaincek Instagram hesabındaki gerçek
-paylaşımlardan** alınmıştır. Instagram herkese açık erişimde görselleri
-**640 piksel** ile sınırladığı için kaynak çözünürlük bu seviyededir.
+Sitedeki görsellerin çoğu **geçici temsili fotoğraftır** (Unsplash, ücretsiz ve
+ticari kullanıma açık lisans, atıf zorunluluğu yok). Bunlar mekânın kendi
+fotoğrafları **değildir** ve gerçek çekimler hazır olunca değiştirilmelidir.
 
-Tasarım buna göre kurgulandı: fotoğraflar hiçbir yerde büyütülmez, kartlarda ve
-galeride kendi çözünürlüğünde gösterilir. Ana sayfadaki büyük görsel alanı bu
-yüzden tek geniş fotoğraf yerine **üç dikey fotoğraftan oluşan triptik** olarak
-tasarlandı — her panel yaklaşık kendi boyutunda görünür, bulanıklık olmaz.
+**İstisna:** Ana sayfa ve galeri sayfasındaki **Instagram ızgarası**
+(`assets/img/ig/01–08.jpg`) gerçek @lamozzaincek gönderileridir ve her kare
+ilgili Instagram gönderisine bağlanır. Orası olduğu gibi kalmalı.
 
-### Kaliteyi yükseltmek (önerilir)
+Neden temsili kullanıldı: Instagram herkese açık erişimde görselleri 640 piksele
+sınırlıyor; o boyuttaki kareler sitede büyütülünce bulanık kalıyordu, ayrıca
+bazılarında başka çiftlerin isimleri (tabela/ayna yazıları) görünüyordu.
 
-Elinizdeki **orijinal yüksek çözünürlüklü** fotoğrafları koyarsanız site
-kendiliğinden keskinleşir. Yapılacak tek şey: aynı isimle üzerine yazmak.
+**Yerine gerçek fotoğraf koymak:** Aşağıdaki tabloda hangi dosyanın nerede
+kullanıldığı yazıyor. Aynı isimle üzerine yazmanız yeterli — kod değişikliği
+gerekmez. Önerilen boyutlara uyarsanız sayfa hızı korunur.
 
 | Dosya | Nerede kullanılıyor | Önerilen boyut |
 |---|---|---|
@@ -152,16 +161,18 @@ Bir dosya yoksa site **bozulmaz** — yerine tasarlanmış bir doku/monogram
 gösterilir. Video sadece masaüstünde ve kullanıcı hareket kısıtlaması
 açmadıysa yüklenir; mobilde hiç indirilmez.
 
-### Telif notu
+### Telif / lisans notu
 
-Instagram'daki bazı paylaşımlar organizasyon firmaları ve fotoğrafçılarla ortak
-etiketli. Kalıcı kullanımda ilgili fotoğrafçılardan yazılı izin almanız veya
-kendi çekimlerinizi koymanız önerilir. Kaynak gönderiler:
-
-`DbS7-F5M1zW · DbG0qNrMKzq · DafqiwPsi4t · DaaDCccgmpD · DZ0FAaCiGuz ·
-DZhYzOhsOdy · DZW_axZtqMy · DY60fysM2f8 · DYrjaczsxQz · DYRlhtzMWYY ·
-DXsA3M4jO8q · DXpS8wUjOX6`
-(`https://www.instagram.com/p/<kod>/`)
+- **Temsili görseller:** Unsplash lisansı — ücretsiz, ticari kullanıma açık,
+  atıf zorunlu değil. Yine de kalıcı kullanımda mekânın kendi fotoğraflarına
+  geçilmesi önerilir; başka bir mekânın fotoğrafıyla müşteri beklentisi
+  oluşturmak doğru olmaz.
+- **Instagram kareleri:** @lamozzaincek hesabının kendi gönderileri. Bazı
+  paylaşımlar organizasyon firmaları ve fotoğrafçılarla ortak etiketli;
+  kalıcı kullanımda ilgili fotoğrafçılardan yazılı izin alınması önerilir.
+  Kaynak gönderiler: `DbS7-F5M1zW · DY60fysM2f8 · DZ0FAaCiGuz · DXpS8wUjOX6 ·
+  DafqiwPsi4t · DZW_axZtqMy · DbG0qNrMKzq · DYRlhtzMWYY`
+  (`https://www.instagram.com/p/<kod>/`)
 
 ---
 

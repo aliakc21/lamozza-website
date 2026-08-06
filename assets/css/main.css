@@ -624,10 +624,23 @@ body.menu-acik .mobil{ clip-path:inset(0); opacity:1; visibility:visible; }
     radial-gradient(70% 55% at 85% 90%, rgba(90,99,80,.40) 0%, transparent 58%),
     linear-gradient(165deg,#3A3D32 0%,#292C23 46%,#1F221B 100%);
 }
-.sayfa-bas__medya img{ width:100%; height:100%; object-fit:cover; opacity:.5; }
+.sayfa-bas__medya img{
+  width:100%; height:100%; object-fit:cover;
+  opacity:.42;
+  filter:brightness(.85) saturate(.9);
+}
+/* İki katmanlı perde — parlak (gökyüzü, cam tavan) fotoğraflarda da
+   başlık ve alt metin WCAG kontrastını koruyor. */
 .sayfa-bas::after{
   content:""; position:absolute; inset:0; z-index:-1;
-  background:linear-gradient(to top, rgba(20,22,17,.72), rgba(20,22,17,.30));
+  background:
+    linear-gradient(to top,   rgba(18,20,15,.88) 0%, rgba(18,20,15,.52) 55%, rgba(18,20,15,.44) 100%),
+    linear-gradient(100deg,   rgba(18,20,15,.78) 0%, rgba(18,20,15,.52) 45%, rgba(18,20,15,.26) 100%);
+}
+@media (max-width:860px){
+  .sayfa-bas::after{
+    background:linear-gradient(to top, rgba(18,20,15,.90) 0%, rgba(18,20,15,.66) 60%, rgba(18,20,15,.58) 100%);
+  }
 }
 .sayfa-bas h1{ color:#F7F4EA; max-width:18ch; }
 .sayfa-bas .eyebrow{ color:#D9CDB4; }
