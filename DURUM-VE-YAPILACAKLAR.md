@@ -111,6 +111,36 @@ DNS yayılınca (24 saate kadar) GitHub sertifikaları otomatik üretir; ben
 
 ---
 
+
+---
+
+## 🔧 6 Ağustos — "Açılır-kapanır tavan" iddiası kaldırıldı
+
+İşletme bildirdi: **tavan artık açılıp kapanmıyor.**
+
+Bu sitenin ana ayırt edici mesajıydı ve 20 dosyada 137 yerde geçiyordu
+(hero metni, rakam şeridi, alanlar turu, yağmur planı bölümü, 8 SSS cevabı,
+JSON-LD, meta açıklamalar, `llms.txt`). Hepsi temizlendi — `grep -i tavan`
+artık hiçbir sayfada sonuç vermiyor.
+
+**Değer önermesi korundu.** Yağmur planı hâlâ geçerli çünkü bahçe ve kapalı
+salon zaten aynı arazide. Sadece mekanizma değişti:
+
+| Önce | Sonra |
+|---|---|
+| "Yağmur yağarsa düğün durmaz — sadece tavan kapanır." | "Yağmur yağarsa düğün durmaz — davet yürüme mesafesindeki salona geçer." |
+| "12 ay · Açılır Tavan Sayesinde" | "12 ay · Kapalı Salon Sayesinde" |
+| "Tavan kapalıyken salon ısıtmalı bir konak gibi çalışır" | "Isıtmalı kapalı salon sayesinde kış düğünü, yılbaşı ve kurumsal etkinlikler 12 ay yapılabiliyor" |
+| "açılır-kapanır tavanlı 500 kişilik salon" | "500 kişilik ısıtmalı kapalı salon" |
+
+`assets/img/acilir-tavan.jpg` → `assets/img/yagmur-plani.jpg` olarak
+yeniden adlandırıldı (görsel zaten cama vuran yağmur damlası).
+
+> **Tavan tekrar çalışır hale gelirse:** bu tabloyu tersine uygulamak yeterli.
+> Değişiklik tek bir commit'te (`git log --grep="tavan"`), geri almak kolay.
+
+---
+
 ## 🔎 Yayın öncesi işletmeye doğrulatılacaklar
 
 Bu bilgiler mekanın **kendi eski sitesinden** (web arşivi 2017–2018) ve halka
