@@ -125,17 +125,21 @@ alıp Bulk Redirect kuralı yazmak. Daha esnek ama daha çok adım.
 
 ### Şu anki durum — ÖNEMLİ
 
-Sitedeki görsellerin çoğu **geçici temsili fotoğraftır** (Unsplash, ücretsiz ve
-ticari kullanıma açık lisans, atıf zorunluluğu yok). Bunlar mekânın kendi
-fotoğrafları **değildir** ve gerçek çekimler hazır olunca değiştirilmelidir.
+Sitedeki görsellerin tamamı **mekânı göstermeyen detay fotoğraflarıdır**:
+çiçek, mum, zeytin dalı, kadeh, sofra detayı, cama vuran yağmur. Hiçbirinde
+oda, salon, bahçe ya da bina görünmez.
+
+**Bu bilinçli bir tercih.** Başka bir mekânın iç/dış fotoğrafı konulsaydı
+ziyaretçi bunu La Mozza sanırdı. Detay görselleri atmosferi anlatır ama
+"burası bizim salonumuz" iddiası taşımaz. Alt metinler (`alt`) ve galeri
+açıklamaları da buna göre yazıldı — hiçbiri belirli bir alanı işaret etmez.
+
+Kaynak: Unsplash — ücretsiz, ticari kullanıma açık, atıf zorunlu değil.
 
 **İstisna:** Ana sayfa ve galeri sayfasındaki **Instagram ızgarası**
 (`assets/img/ig/01–08.jpg`) gerçek @lamozzaincek gönderileridir ve her kare
-ilgili Instagram gönderisine bağlanır. Orası olduğu gibi kalmalı.
-
-Neden temsili kullanıldı: Instagram herkese açık erişimde görselleri 640 piksele
-sınırlıyor; o boyuttaki kareler sitede büyütülünce bulanık kalıyordu, ayrıca
-bazılarında başka çiftlerin isimleri (tabela/ayna yazıları) görünüyordu.
+ilgili gönderiye bağlanır. Mekânın kendi kareleri orada gösteriliyor;
+site metinleri de ziyaretçiyi oraya yönlendiriyor.
 
 **Yerine gerçek fotoğraf koymak:** Aşağıdaki tabloda hangi dosyanın nerede
 kullanıldığı yazıyor. Aynı isimle üzerine yazmanız yeterli — kod değişikliği
