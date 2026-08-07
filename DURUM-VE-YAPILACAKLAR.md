@@ -1,87 +1,113 @@
 # La Mozza — Yayın Durumu
 
-Son güncelleme: 3 Ağustos 2026, 16:45
+Son güncelleme: 6 Ağustos 2026
 
 ---
 
-## 🟢 SİTE CANLI VE HTTPS'Lİ
+## 🟢 ANA SİTE CANLI VE GÜVENLİ
 
 # https://www.lamozza.com.tr
 
-18 sayfanın tamamı HTTPS üzerinden test edildi → **18/18 · 200 OK**
-Sertifika: Let's Encrypt, geçerli (3 Ağu → 1 Kas 2026), otomatik yenilenir.
-
-| Adres | Durum |
-|---|---|
-| `https://www.lamozza.com.tr` | ✅ **Site — HTTPS** |
-| `http://www.lamozza.com.tr` | ✅ 301 → HTTPS |
-| `http://lamozza.com.tr` | ✅ 301 → https://www.lamozza.com.tr |
-| `https://lamozza.com.tr` | ❌ Sertifika yok (aşağıdaki yazım hatası yüzünden) |
-| `lamozza.org` / `.xyz` / `.tr` | ⚠️ Yönlendiriyor ama **hedefi güncellenmeli** |
-
-### Neden `www`?
-
-`www.lamozza.com.tr` bir **CNAME** kaydı (`aliakc21.github.io`) — GitHub'ın kendi
-DNS'ini takip ediyor, dolayısıyla dört IP'nin dördü de doğru geliyor ve isimtescil'in
-yazım hatasından **etkilenmiyor**. Bu sayede sertifika alınabildi.
-
-Kök alan adı ise sabit 4 A kaydına bağlı ve biri hatalı → sertifika alamıyor.
-GitHub da zaten `www` kullanımını öneriyor (IP değişikliklerinde kayıt bayatlamaz).
+18 sayfa, Let's Encrypt sertifikası geçerli, HTTPS zorunlu.
 
 ---
 
-## ⚠️ isimtescil'de kalan 2 iş
+## 🔴 "Güvenli değil" uyarısının sebebi
 
-### 1. Yanlış girilen A kaydı
+| Adres | HTTP | HTTPS | Neden |
+|---|---|---|---|
+| `www.lamozza.com.tr` | 301 → HTTPS | ✅ **Güvenli** | — |
+| `lamozza.com.tr` | ⚠️ %25 ihtimalle `500` | ❌ | isimtescil'in A kaydı yazım hatası |
+| `lamozza.org` | 200 (yönlendiriyor) | ❌ | **isimtescil yönlendirme sunucusu HTTPS desteklemiyor** |
+| `lamozza.xyz` | 200 (yönlendiriyor) | ❌ | aynı |
+| `lamozza.tr` | 200 (yönlendiriyor) | ❌ | aynı |
 
-`lamozza.com.tr` için girilen 4 A kaydından biri hatalı:
-
-```
-185.199.108.153   ✅
-185.199.109.153   ✅
-185.199.110.153   ✅
-185.199.111.15    ❌  ← sonunda "3" eksik, doğrusu 185.199.111.153
-```
-
-O IP GitHub'a ait değil, test edildi: `HTTP/1.1 500 Domain Not Found`.
-Etkisi: doğrudan `lamozza.com.tr` yazan ziyaretçilerin ~%25'i hata alıyor ve
-`https://lamozza.com.tr` (www'suz HTTPS) çalışmıyor.
-
-**Panelden düzeltilemiyor** — kök (apex) kayıtlar korumalı: silme "başarılı" diyor
-ama kayıt duruyor, kalemle düzenleyip kaydedince değişmiyor. Alt alan adı
-kayıtlarında aynı işlemler sorunsuz çalışıyor.
-
-→ **Ticket 2302904'e düzeltme talebi yazıldı.** Düzelince `https://lamozza.com.tr`
-de kendiliğinden çalışmaya başlayacak (GitHub kök için de sertifika üretir).
-
-### 2. Yönlendirme hedefleri güncellenmeli
-
-`.tr`, `.org`, `.xyz` şu an `https://lamozza.com.tr`'ye yönlendiriyor — o adresin
-sertifikası olmadığı için bağlantı kurulamıyor. Hedef şu olmalı:
-
-```
-https://www.lamozza.com.tr
-```
-
-`Panel → Domainlerim → <alan adı> → Başka Adrese Yönlendirme` · Standart Yönlendirme
-
-> **isimtescil oturumu düştü**, panele yeniden giriş yapılması gerekiyor.
-> Giriş yapıldıktan sonra bu üç yönlendirme 2 dakikada güncellenebilir.
+**Ölçüm:** `openssl s_client -connect lamozza.org:443` → *sertifika sunulmuyor*.
+isimtescil'in yönlendirme sunucusu (`93.89.226.17`) 443 portunda hiç sertifika
+vermiyor. Bu bir ayar meselesi değil; o servis kullanıldığı sürece bu üç alan
+adı **hiçbir zaman** HTTPS olamaz.
 
 ---
 
-## 📋 3 Ağustos'ta yapılanlar
+## ✅ Çözüm hazırlandı — 3 yönlendirme sitesi kuruldu
 
-1. DNS bölgelerinin açıldığı yetkili sunucudan doğrulandı
-2. Hatalı A kaydı tespit edildi, ölü olduğu `curl --resolve` ile kanıtlandı
-3. Panelden silme/düzenleme denendi → apex korumalı
-4. Ticket 2302904'e düzeltme talebi yazıldı
-5. `.tr`, `.org`, `.xyz` yönlendirmeleri kuruldu (üçü de aktif)
-6. Site `www.lamozza.com.tr` üzerine alındı → **sertifika onaylandı, HTTPS açıldı**
-7. Tüm site URL'leri (canonical, og:url, JSON-LD, sitemap, robots, llms.txt) `www`'ye güncellendi
-8. 18 sayfa HTTP ve HTTPS üzerinden ayrı ayrı test edildi → 18/18
-9. Varlıklar test edildi (CSS, JS, fotoğraflar, og-image, favicon, sitemap, robots, manifest) → hepsi 200
-10. 404 sayfası doğrulandı
+isimtescil'in yönlendirme servisi yerine **GitHub Pages** kullanılacak.
+GitHub her alan adına ücretsiz Let's Encrypt sertifikası veriyor.
+
+| Depo | Alan adı | Durum |
+|---|---|---|
+| `aliakc21/lamozza-org-redirect` | lamozza.org | ✅ Kuruldu, DNS bekliyor |
+| `aliakc21/lamozza-xyz-redirect` | lamozza.xyz | ✅ Kuruldu, DNS bekliyor |
+| `aliakc21/lamozza-tr-redirect` | lamozza.tr | ✅ Kuruldu, DNS bekliyor |
+
+Her biri gelen yolu koruyarak yönlendirir:
+`lamozza.org/dugun/` → `https://www.lamozza.com.tr/dugun/`
+Arama motorlarına `noindex` verilir, kopya içerik sorunu olmaz.
+
+---
+
+## ⏳ Kalan tek adım: isimtescil'de DNS
+
+**Her üç alan adı için** (`lamozza.org`, `lamozza.xyz`, `lamozza.tr`):
+
+1. `Panel → Domainlerim → <alan adı> → Başka Adrese Yönlendirme` → **yönlendirmeyi kaldır**
+   (yoksa DNS'i kendi sunucusuna geri çeker)
+2. `Panel → Domainlerim → <alan adı> → IP Bazlı DNS Yönetimi` → şu kayıtlar:
+
+| Tip | Ad | Değer |
+|---|---|---|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `aliakc21.github.io` |
+
+**Ve `lamozza.com.tr` için** hatalı kaydın düzeltilmesi:
+
+```
+185.199.111.15    ❌  →  185.199.111.153   ✅
+```
+
+DNS yayılınca (24 saate kadar) GitHub sertifikaları otomatik üretir; ben
+`Enforce HTTPS`'i açarım ve beş adresin beşi de güvenli olur.
+
+> ⚠️ **Apex (kök) kayıtlar panelde korumalı** — silme "başarılı" der ama kayıt
+> kalır, düzenleme kaydedilmez. Bu yüzden bu adımları büyük ihtimalle
+> **isimtescil desteğinin** yapması gerekiyor. Hazır talep metni aşağıda.
+
+---
+
+## 📧 isimtescil'e gönderilecek metin (Ticket 2302904'e ek)
+
+> Merhaba,
+>
+> Üye ID: 201898
+>
+> **1)** `lamozza.com.tr` için girilen A kayıtlarından biri hatalı:
+> `185.199.111.15` → doğrusu **`185.199.111.153`** (sonunda 3 eksik).
+> O IP GitHub'a ait değil, `500 Domain Not Found` dönüyor ve kök alan adı
+> için SSL sertifikası üretilemiyor.
+>
+> **2)** `lamozza.org`, `lamozza.xyz` ve `lamozza.tr` alan adlarında
+> **"Başka Adrese Yönlendirme" özelliğini kaldırıp** DNS kayıtlarını
+> aşağıdaki gibi güncelleyebilir misiniz? (Bu üç alan adını da GitHub
+> Pages üzerinden SSL'li yönlendireceğim; sizin yönlendirme sunucunuz
+> 443 portunda sertifika sunmadığı için `https://lamozza.org` çalışmıyor.)
+>
+> ```
+> A      @      185.199.108.153
+> A      @      185.199.109.153
+> A      @      185.199.110.153
+> A      @      185.199.111.153
+> CNAME  www    aliakc21.github.io
+> ```
+>
+> **3)** Kök (apex) kayıtları panelden düzenleyemiyorum: silme işleminde
+> "işlem başarılı" mesajı çıkıyor ama kayıt kalıyor, kalem ikonuyla
+> düzenleyip kaydettiğimde de değişiklik uygulanmıyor. Alt alan adı
+> kayıtlarında aynı işlemler sorunsuz çalışıyor.
+>
+> Teşekkürler.
 
 ---
 
